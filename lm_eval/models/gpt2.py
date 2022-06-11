@@ -129,3 +129,29 @@ class HFLM(BaseLM):
 
 # for backwards compatibility
 GPT2LM = HFLM
+
+class GPT2WithPhaseShift(HFLM):
+    def __init__(self,phase_shift=0, **kwargs):
+        super().__init__(**kwargs)
+        self.phase_shift = int(phase_shift)
+
+    def _model_call(self, inps: torch.Tensor):
+        """
+        inps: a torch tensor of shape [batch, sequence]
+        the size of sequence may vary from call to call
+
+        returns: a torch tensor of shape [batch, sequence, vocab] with the
+        logits returned from the model
+        """
+        with torch.no_grad():
+            if self.phase_shift != 0:
+                batch_size, seq_len = inps.shape
+                position_ids = torch.arange(0, seq_len, dtype=torch.long, device=inps.device)
+                position_ids = position_ids.unsqueeze(0).view(-1, seq_len).repeat(batch_size, 1)
+                position_ids += self.phase_shift
+                position_ids = position_ids.to(inps.device)
+            else:
+                position_ids = None
+            
+            return self.gpt2(input_ids=inps, position_ids=position_ids)[0][:, :, :50257]
+

@@ -480,7 +480,7 @@ class OPTWithPhaseShift(OPT):
 
         # Initializes an empty shell with the model. This is instant and does not take any RAM.
         with accelerate.init_empty_weights():
-            model = CustomOPTForCausalLM.from_config(config)
+            model = CustomOPTForCausalLM(config)
         # Initialize the model under the previous context manager breaks the tied weights.
         model.tie_weights()
 

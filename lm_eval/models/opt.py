@@ -1,5 +1,5 @@
 import os
-from random import random
+import random
 from typing import Optional, List, Union, Tuple
 
 import accelerate

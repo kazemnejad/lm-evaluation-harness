@@ -24,6 +24,11 @@ if __name__ == "__main__":
                     output_path = (
                         results_dir / f"{ds}__{model}__{shot}__{model_name}__{ps}.json"
                     )
+                    print(f"Running results for {output_path}")
+                    if output_path.exists():
+                        print("Skipped.")
+                        continue
+
                     batch_size = (
                         8
                         if model_name in ["gpt2-base", "gpt2-medium", "gpt2-large"]

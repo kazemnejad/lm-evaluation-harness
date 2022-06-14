@@ -25,6 +25,17 @@ from lm_eval.models.gpt2 import HFLM
 
 
 class CustomOPTLearnedPositionalEmbedding(OPTLearnedPositionalEmbedding):
+    def __init__(self, num_embeddings: int, embedding_dim: int, padding_idx: int = 1):
+        super(OPTLearnedPositionalEmbedding, self).__init__(
+            num_embeddings, embedding_dim, padding_idx
+        )
+        self.onnx_trace = False
+        if self.padding_idx is not None:
+            self.max_positions = self.num_embeddings - self.padding_idx - 1
+        else:
+            self.max_positions = self.num_embeddings
+        self.has_logged = False
+
     def forward(self, attention_mask: Tensor, positions: Optional[Tensor] = None):
         if positions is None:
             attention_mask = attention_mask.long()
@@ -33,6 +44,11 @@ class CustomOPTLearnedPositionalEmbedding(OPTLearnedPositionalEmbedding):
             positions = torch.where(
                 attention_mask.bool(), positions, self.padding_idx
             ).long()
+
+        if not self.has_logged:
+            print("-------> positions:")
+            print(positions)
+            self.has_logged = True
 
         return F.embedding(
             positions,
@@ -405,8 +421,10 @@ class OPT(HFLM):
         #     self.gpt2 = nn.DataParallel(self.gpt2)
 
         self.pretrained = pretrained
+        self.has_logged = False
 
         self._load_opt_model()
+
 
     def _load_opt_model(self):
         weights_path = huggingface_hub.snapshot_download(self.pretrained)
@@ -543,5 +561,10 @@ class OPTWithPhaseShift(OPT):
                 position_ids = position_ids.to(inps.device)
             else:
                 position_ids = None
+
+            if not self.has_logged:
+                print("-------> inputs:")
+                print(self.tokenizer.batch_decode(inps))
+                self.has_logged = True
 
             return self.gpt2(input_ids=inps, position_ids=position_ids)[0][:, :, :50257]

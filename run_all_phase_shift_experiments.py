@@ -55,6 +55,7 @@ if __name__ == "__main__":
                         print(python_run_script)
                         try:
                             os.system(python_run_script)
+                            print("\n"*5)
                             time.sleep(5)
                         except Exception as exp:
                             print(exp)

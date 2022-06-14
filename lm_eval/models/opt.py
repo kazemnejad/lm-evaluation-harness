@@ -564,7 +564,7 @@ class OPTWithPhaseShift(OPT):
 
             if not self.has_logged:
                 print("-------> inputs:")
-                print(self.tokenizer.batch_decode(inps))
+                print(self.tokenizer.batch_decode(inps)[0])
                 self.has_logged = True
 
             return self.gpt2(input_ids=inps, position_ids=position_ids)[0][:, :, :50257]

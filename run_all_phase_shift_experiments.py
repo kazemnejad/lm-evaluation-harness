@@ -30,7 +30,7 @@ if __name__ == "__main__":
             for model, model_name in MODELS:
                 for shot in FEW_SHOTS:
                     for ps in PHASE_SHIFTS:
-                        exp_name = f"{seed}__{ds}__{model_name}__{shot}__{ps}"
+                        exp_name = f"s-{seed}___ds-{ds}___m-{model_name}___f-{shot}___ps-{ps}"
                         exp_name = exp_name.replace("EleutherAI/", "").replace(
                             "facebook/", ""
                         )

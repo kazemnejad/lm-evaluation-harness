@@ -431,20 +431,21 @@ class OPT(HFLM):
             model.model, no_split_module_classes=["OPTDecoderLayer"], dtype="float16"
         )
 
-        embed_tokens_device = device_map["decoder.embed_tokens"]
-        num_gpus = torch.cuda.device_count()
-        num_layers = config.num_hidden_layers
+        if "decoder.embed_tokens" in device_map and "decoder.layers.0" in device_map:
+            embed_tokens_device = device_map["decoder.embed_tokens"]
+            num_gpus = torch.cuda.device_count()
+            num_layers = config.num_hidden_layers
 
-        # Evenly distribute layers between gpus
-        if num_gpus > 0:
-            bs = ((num_layers - 1) // num_gpus) + 1
-            for k, i in enumerate(range(0, num_layers - 1, bs)):
-                for j in range(i, min(i + bs, num_layers - 1)):
-                    device_map[f"decoder.layers.{j}"] = k
+            # Evenly distribute layers between gpus
+            if num_gpus > 0:
+                bs = ((num_layers - 1) // num_gpus) + 1
+                for k, i in enumerate(range(0, num_layers - 1, bs)):
+                    for j in range(i, min(i + bs, num_layers - 1)):
+                        device_map[f"decoder.layers.{j}"] = k
 
-        # Last layer needs to be on the same device as the token embedding
-        # because the vocabulary projection layer has its weight tied to the token embedding
-        device_map[f"decoder.layers.{num_layers-1}"] = embed_tokens_device
+            # Last layer needs to be on the same device as the token embedding
+            # because the vocabulary projection layer has its weight tied to the token embedding
+            device_map[f"decoder.layers.{num_layers - 1}"] = embed_tokens_device
 
         print(f"Device map for loading {self.pretrained}")
         print(device_map)
@@ -489,20 +490,21 @@ class OPTWithPhaseShift(OPT):
             model.model, no_split_module_classes=["OPTDecoderLayer"], dtype="float16"
         )
 
-        embed_tokens_device = device_map["decoder.embed_tokens"]
-        num_gpus = torch.cuda.device_count()
-        num_layers = config.num_hidden_layers
+        if "decoder.embed_tokens" in device_map and "decoder.layers.0" in device_map:
+            embed_tokens_device = device_map["decoder.embed_tokens"]
+            num_gpus = torch.cuda.device_count()
+            num_layers = config.num_hidden_layers
 
-        # Evenly distribute layers between gpus
-        if num_gpus > 0:
-            bs = ((num_layers - 1) // num_gpus) + 1
-            for k, i in enumerate(range(0, num_layers - 1, bs)):
-                for j in range(i, min(i + bs, num_layers - 1)):
-                    device_map[f"decoder.layers.{j}"] = k
+            # Evenly distribute layers between gpus
+            if num_gpus > 0:
+                bs = ((num_layers - 1) // num_gpus) + 1
+                for k, i in enumerate(range(0, num_layers - 1, bs)):
+                    for j in range(i, min(i + bs, num_layers - 1)):
+                        device_map[f"decoder.layers.{j}"] = k
 
-        # Last layer needs to be on the same device as the token embedding
-        # because the vocabulary projection layer has its weight tied to the token embedding
-        device_map[f"decoder.layers.{num_layers-1}"] = embed_tokens_device
+            # Last layer needs to be on the same device as the token embedding
+            # because the vocabulary projection layer has its weight tied to the token embedding
+            device_map[f"decoder.layers.{num_layers-1}"] = embed_tokens_device
 
         print(f"Device map for loading {self.pretrained}")
         print(device_map)

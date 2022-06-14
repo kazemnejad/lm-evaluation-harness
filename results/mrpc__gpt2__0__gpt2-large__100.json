@@ -1,0 +1,24 @@
+{
+  "results": {
+    "mrpc": {
+      "acc": 0.33088235294117646,
+      "acc_stderr": 0.023323345195086376,
+      "f1": 0.07457627118644067,
+      "f1_stderr": 0.021140579225830784
+    }
+  },
+  "versions": {
+    "mrpc": 0
+  },
+  "config": {
+    "model": "gpt2-ps",
+    "model_args": "pretrained=gpt2-large,phase_shift=100",
+    "num_fewshot": 0,
+    "batch_size": 8,
+    "device": null,
+    "no_cache": true,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "description_dict": {}
+  }
+}

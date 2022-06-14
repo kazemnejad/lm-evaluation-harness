@@ -1,0 +1,22 @@
+{
+  "results": {
+    "rte": {
+      "acc": 0.6642599277978339,
+      "acc_stderr": 0.028426021205818785
+    }
+  },
+  "versions": {
+    "rte": 0
+  },
+  "config": {
+    "model": "opt-ps",
+    "model_args": "pretrained=facebook/opt-30b,phase_shift=0",
+    "num_fewshot": 5,
+    "batch_size": 1,
+    "device": null,
+    "no_cache": true,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "description_dict": {}
+  }
+}

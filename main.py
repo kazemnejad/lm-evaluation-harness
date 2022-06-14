@@ -1,7 +1,7 @@
 import argparse
+import fnmatch
 import json
 import logging
-import fnmatch
 
 from lm_eval import tasks, evaluator
 
@@ -32,6 +32,7 @@ def parse_args():
     parser.add_argument("--tasks", default=None, choices=MultiChoice(tasks.ALL_TASKS))
     parser.add_argument("--provide_description", action="store_true")
     parser.add_argument("--num_fewshot", type=int, default=0)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--batch_size", type=int, default=None)
     parser.add_argument("--device", type=str, default=None)
     parser.add_argument("--output_path", default=None)
@@ -88,6 +89,7 @@ def main():
         description_dict=description_dict,
         decontamination_ngrams_path=args.decontamination_ngrams_path,
         check_integrity=args.check_integrity,
+        seed=args.seed,
     )
 
     dumped = json.dumps(results, indent=2)

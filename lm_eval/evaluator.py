@@ -1,11 +1,13 @@
 import collections
 import itertools
-import numpy as np
 import random
+
+import numpy as np
+
+import lm_eval.base
 import lm_eval.metrics
 import lm_eval.models
 import lm_eval.tasks
-import lm_eval.base
 from lm_eval.utils import positional_deprecated, run_task_tests
 
 
@@ -23,6 +25,7 @@ def simple_evaluate(
     description_dict=None,
     check_integrity=False,
     decontamination_ngrams_path=None,
+    seed=42,
 ):
 
     """Instantiate and evaluate a model on a list of tasks.
@@ -91,6 +94,7 @@ def simple_evaluate(
         bootstrap_iters=bootstrap_iters,
         description_dict=description_dict,
         decontamination_ngrams_path=decontamination_ngrams_path,
+        seed=seed,
     )
 
     # add info about the model and few shot config
@@ -122,6 +126,7 @@ def evaluate(
     bootstrap_iters=100000,
     description_dict=None,
     decontamination_ngrams_path=None,
+    seed=42,
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -194,8 +199,9 @@ def evaluate(
 
         # deterministically shuffle docs and chop off the first `limit` because sometimes docs are in some kind of order
         task_docs = list(task_doc_func())
+        print(f"Setting seed for prompt selection: {seed}")
         rnd = random.Random()
-        rnd.seed(42)
+        rnd.seed(seed)
         rnd.shuffle(task_docs)
 
         description = (

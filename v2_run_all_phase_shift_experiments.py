@@ -72,7 +72,7 @@ if __name__ == "__main__":
                                 with (results_dir/exp_name.replace("ds-PLACEHOLDER", f"ds-{ds}")).open("w") as f:
                                     json.dump(r, f)
 
-                        os.remove(output_path)
+                        # os.remove(output_path)
                     except Exception as exp:
                         print(exp)
                         exit(1)

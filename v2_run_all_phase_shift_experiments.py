@@ -69,8 +69,8 @@ if __name__ == "__main__":
                                 r["results"] = {
                                     ds: res
                                 }
-                                with (results_dir/exp_name.replace("ds-PLACEHOLDER", f"ds-{ds}")).open("w") as f:
-                                    json.dump(r, f)
+                                with (results_dir/(exp_name.replace("ds-PLACEHOLDER", f"ds-{ds}")+".json")).open("w") as f:
+                                    json.dump(r, f, indent=4)
 
                         # os.remove(output_path)
                     except Exception as exp:

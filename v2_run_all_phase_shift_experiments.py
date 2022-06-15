@@ -63,7 +63,7 @@ if __name__ == "__main__":
                         time.sleep(5)
                         with output_path.open() as f:
                             r_orig = json.load(f)
-                            for ds, res in r_orig["results"]:
+                            for ds, res in r_orig["results"].items():
                                 r = copy.deepcopy(r_orig)
                                 del r["results"]
                                 r["results"] = {

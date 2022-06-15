@@ -4,7 +4,7 @@ from pathlib import Path
 random.seed(42)
 SEEDS = [random.randint(1, 1e6) for _ in range(5)]
 print("Seeds:", SEEDS)
-DATASETS = ["mrpc", "rte", "cola", "boolq", "cb"]
+DATASETS = ["mrpc", "rte", "cola", "cb"]
 MODELS = [
     # ("gpt2", "EleutherAI/gpt-neo-125M"),
     ("opt", "facebook/opt-125m"),
@@ -15,7 +15,7 @@ MODELS = [
     ("opt", "facebook/opt-13b"),
     ("opt", "facebook/opt-30b"),
 ]
-PHASE_SHIFTS = list(range(0, 1001, 100))
+PHASE_SHIFTS = list(range(0, 1100, 100))
 FEW_SHOTS = [0, 5]
 
 import os
@@ -29,6 +29,9 @@ if __name__ == "__main__":
         for ds in DATASETS:
             for model, model_name in MODELS:
                 for shot in FEW_SHOTS:
+                    if shot == 0 and seed != SEEDS[0]:
+                        continue
+
                     for ps in PHASE_SHIFTS:
                         exp_name = f"s-{seed}___ds-{ds}___m-{model_name}___f-{shot}___ps-{ps}"
                         exp_name = exp_name.replace("EleutherAI/", "").replace(
